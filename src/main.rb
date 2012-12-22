@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+
 $:.unshift File.dirname(__FILE__)
 
 $VERBOSE = true
@@ -42,7 +43,7 @@ class GameWindow < Gosu::Window
     self.caption = 'Heightmap Visualizer'
     Alphabet::initialize(self)
     @heightmap = HeightMap.new(20, 20)
-    #@heightmap.generate(50)
+    #@heightmap.generate(100)
     @grid = @heightmap.get_grid()
     @tile_width = 640.0 / @heightmap.width
     @tile_height = 640.0 / @heightmap.height

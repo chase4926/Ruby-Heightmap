@@ -39,7 +39,7 @@ class HeightMap
   
   def get_average_difference(x, y, max=6)
     # Averages the height of the surrounding cells- max of 6 both ways
-    average_diff = (get_score(x, y) / 8) - get(x, y)
+    average_diff = (get_score(x, y) / 8.0).round() - get(x, y)
     if average_diff.abs() > max then
       if average_diff > 0 then
         return max
@@ -58,7 +58,7 @@ class HeightMap
     average_difference.abs().times() do
       possibility_array << average_difference / average_difference.abs()
     end
-    return possibility_array.sample() + get(x, y)
+    return possibility_array.shuffle().pop() + get(x, y)
   end
   
   def calculate_new_height_grid()
@@ -78,8 +78,6 @@ class HeightMap
   
   def generate(generations)
     # Generates a heightmap with a given amount of generations
-    # I'd recommend a max of 50, after that it begins to "black hole"
-    # If you don't know what I mean by "black hole" try > 300 generations
     if generations.to_i() >= 1 then
       generations.to_i().times() do
         calculate_new_height_grid()
