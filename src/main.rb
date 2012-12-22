@@ -41,8 +41,8 @@ class GameWindow < Gosu::Window
     super(640, 640, false)
     self.caption = 'Heightmap Visualizer'
     Alphabet::initialize(self)
-    @heightmap = HeightMap.new(100, 100)
-    @heightmap.generate(50)
+    @heightmap = HeightMap.new(20, 20)
+    #@heightmap.generate(50)
     @grid = @heightmap.get_grid()
     @tile_width = 640.0 / @heightmap.width
     @tile_height = 640.0 / @heightmap.height
