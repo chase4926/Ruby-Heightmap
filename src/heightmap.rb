@@ -13,6 +13,15 @@ class HeightMap
     return Marshal::load(Marshal::dump(@grid))
   end
   
+  def set_grid(value)
+    # Sets all the cells in the grid to value
+    @height.times() do |y|
+      @width.times() do |x|
+        set(x, y, value)
+      end
+    end
+  end
+  
   def get(x, y)
     if x < 0 or y < 0 or x > @width - 1 or y > @height - 1 then
       return 0
@@ -81,6 +90,36 @@ class HeightMap
     if generations.to_i() >= 1 then
       generations.to_i().times() do
         calculate_new_height_grid()
+      end
+    end
+  end
+  
+  def static(generations=20)
+    # Generates random static on the grid
+    if generations.to_i() >= 1 then
+      set_grid(0)
+      generations.to_i().times() do
+        @height.times() do |y|
+          @width.times() do |x|
+            set(x, y, get(x, y) + [-1, 0, 1].shuffle().pop())
+          end
+        end
+      end
+    end
+  end
+  
+  def average_grid_height()
+    # Finds the average height of the cells, then subtracts the average from the cells
+    sum = 0
+    @height.times() do |y|
+      @width.times() do |x|
+        sum += get(x, y)
+      end
+    end
+    average = (sum.to_f() / (@height * @width)).round()
+    @height.times() do |y|
+      @width.times() do |x|
+        set(x, y, get(x, y) - average)
       end
     end
   end

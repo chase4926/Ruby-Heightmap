@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-
 $:.unshift File.dirname(__FILE__)
 
 $VERBOSE = true
@@ -74,7 +73,6 @@ class GameWindow < Gosu::Window
         draw_square(self, x * @tile_width, y * @tile_height, 1, @tile_width, @tile_height, color)
       end
     end
-    
     Alphabet::draw_text(@heightmap.get(mouse_x_cell(), mouse_y_cell()), mouse_x + 16, mouse_y - 4, 2, 4)
   end # End GameWindow Draw
   
@@ -83,9 +81,19 @@ class GameWindow < Gosu::Window
       when Gosu::Button::KbEscape
         close()
       when Gosu::Button::KbSpace
-        @heightmap.calculate_new_height_grid()
+        # Go through generation on grid
+        @heightmap.generate(1)
+        @grid = @heightmap.get_grid()
+      when Gosu::Button::KbZ
+        # Weak static
+        @heightmap.static()
+        @grid = @heightmap.get_grid()
+      when Gosu::Button::KbX
+        # Strong static
+        @heightmap.static(100)
         @grid = @heightmap.get_grid()
       when Gosu::Button::MsLeft
+        # Calculate new height on cell under cursor
         @heightmap.set(mouse_x_cell(), mouse_y_cell(), @heightmap.calculate_new_height(mouse_x_cell(), mouse_y_cell()))
         @grid = @heightmap.get_grid()
     end
