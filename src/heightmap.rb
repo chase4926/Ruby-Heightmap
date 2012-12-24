@@ -34,6 +34,30 @@ class HeightMap
     @grid[y][x] = value
   end
   
+  def find_min()
+    min = get(0, 0)
+    value = min
+    @height.times() do |y|
+      @width.times() do |x|
+        value = get(x, y)
+        min = value if value < min
+      end
+    end
+    return min
+  end
+  
+  def find_max()
+    max = get(0, 0)
+    value = max
+    @height.times() do |y|
+      @width.times() do |x|
+        value = get(x, y)
+        max = value if value > max
+      end
+    end
+    return max
+  end
+  
   def get_score(x, y)
     score = 0
     (-1..1).each() do |c|
