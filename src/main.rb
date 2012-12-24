@@ -44,17 +44,28 @@ class GameWindow < Gosu::Window
     super($WINDOW_WIDTH, $WINDOW_HEIGHT, false)
     self.caption = 'Heightmap Visualizer'
     Alphabet::initialize(self)
-    @heightmap = HeightMap.new(40, 40)
+    @heightmap = HeightMap.new(80, 80)
     @grid = @heightmap.get_grid()
     @tile_width = $WINDOW_WIDTH.to_f() / @heightmap.width
     @tile_height = $WINDOW_HEIGHT.to_f() / @heightmap.height
     
-    # Color
-    @contrast = 6
+    # Image related
+    @contrast = 8
+    record_new_grid()
   end # End GameWindow Initialize
   
   def update()
   end # End GameWindow Update
+  
+  def record_new_grid()
+    @recorded_image = record($WINDOW_WIDTH, $WINDOW_HEIGHT) do
+      @grid.each_with_index() do |row, y|
+        row.each_with_index do |height, x|
+          draw_square(self, x * @tile_width, y * @tile_height, 1, @tile_width, @tile_height, get_height_color(height))
+        end
+      end
+    end
+  end
   
   def mouse_x_cell()
     return (mouse_x / @tile_width).floor()
@@ -79,11 +90,7 @@ class GameWindow < Gosu::Window
   end
   
   def draw()
-    @grid.each_with_index() do |row, y|
-      row.each_with_index do |height, x|
-        draw_square(self, x * @tile_width, y * @tile_height, 1, @tile_width, @tile_height, get_height_color(height))
-      end
-    end
+    @recorded_image.draw(0, 0, 0)
     Alphabet::draw_text(@heightmap.get(mouse_x_cell(), mouse_y_cell()), mouse_x + 16, mouse_y - 4, 2, 4)
     Alphabet::draw_text("Contrast: #{@contrast}", 16, 16, 2, 4)
   end # End GameWindow Draw
@@ -103,31 +110,38 @@ class GameWindow < Gosu::Window
           @heightmap.generate(1)
         end
         @grid = @heightmap.get_grid()
+        record_new_grid()
       when Gosu::Button::KbZ
         # Weak static
         @heightmap.static()
         @grid = @heightmap.get_grid()
+        record_new_grid()
       when Gosu::Button::KbX
         # Strong static
         @heightmap.static(100)
         @grid = @heightmap.get_grid()
+        record_new_grid()
       when Gosu::Button::MsLeft
         # Calculate new height on cell under cursor
         @heightmap.set(mouse_x_cell(), mouse_y_cell(), @heightmap.calculate_new_height(mouse_x_cell(), mouse_y_cell()))
         @grid = @heightmap.get_grid()
+        record_new_grid()
       when 26
         # Left square bracket
         # Decrease contrast
         @contrast -= 1
+        record_new_grid()
       when 27
         # Right square bracket
         # Increase contrast
         @contrast += 1
+        record_new_grid()
       when Gosu::Button::KbF1
         @heightmap.save('heightmap.dat')
       when Gosu::Button::KbF2
         @heightmap.load('heightmap.dat')
         @grid = @heightmap.get_grid()
+        record_new_grid()
     end
   end
   
