@@ -4,6 +4,9 @@ $:.unshift File.dirname(__FILE__)
 
 $VERBOSE = true
 
+$WINDOW_WIDTH = 640
+$WINDOW_HEIGHT = 640
+
 require 'rubygems'
 require 'gosu'
 include Gosu
@@ -38,16 +41,16 @@ end
 
 class GameWindow < Gosu::Window
   def initialize()
-    super(640, 640, false)
+    super($WINDOW_WIDTH, $WINDOW_HEIGHT, false)
     self.caption = 'Heightmap Visualizer'
     Alphabet::initialize(self)
     @heightmap = HeightMap.new(40, 40)
     @grid = @heightmap.get_grid()
-    @tile_width = 640.0 / @heightmap.width
-    @tile_height = 640.0 / @heightmap.height
+    @tile_width = $WINDOW_WIDTH.to_f() / @heightmap.width
+    @tile_height = $WINDOW_HEIGHT.to_f() / @heightmap.height
     
     # Color
-    @contrast = 5
+    @contrast = 6
   end # End GameWindow Initialize
   
   def update()
@@ -61,21 +64,24 @@ class GameWindow < Gosu::Window
     return (mouse_y / @tile_height).floor()
   end
   
+  def get_height_color(height)
+    value = (@contrast * height) + 127
+    if value > 255 then
+      value = 255
+    elsif value < 0 then
+      value = 0
+    end
+    if height >= 0 then
+      return Gosu::Color.new(255, 0, value, 0)
+    else
+      return Gosu::Color.new(255, 0, 0, value)
+    end
+  end
+  
   def draw()
-    @grid.each_with_index() do |a, y|
-      a.each_with_index do |height, x|
-        value = (@contrast * height) + 127
-        if value > 255 then
-          value = 255
-        elsif value < 0 then
-          value = 0
-        end
-        if height >= 0 then
-          color = Gosu::Color.new(255, 0, value, 0)
-        else
-          color = Gosu::Color.new(255, 0, 0, value)
-        end
-        draw_square(self, x * @tile_width, y * @tile_height, 1, @tile_width, @tile_height, color)
+    @grid.each_with_index() do |row, y|
+      row.each_with_index do |height, x|
+        draw_square(self, x * @tile_width, y * @tile_height, 1, @tile_width, @tile_height, get_height_color(height))
       end
     end
     Alphabet::draw_text(@heightmap.get(mouse_x_cell(), mouse_y_cell()), mouse_x + 16, mouse_y - 4, 2, 4)
@@ -85,12 +91,15 @@ class GameWindow < Gosu::Window
   def button_down(id)
     case id
       when Gosu::Button::KbEscape
+        # Close window on escape
         close()
       when Gosu::Button::KbSpace
         # Go through generation on grid
         if button_down?(Gosu::Button::KbLeftShift) or button_down?(Gosu::Button::KbRightShift) then
+          # Shift is pressed, do 10 generations
           @heightmap.generate(10)
         else
+          # Shift is not pressed, do 1 generation
           @heightmap.generate(1)
         end
         @grid = @heightmap.get_grid()
