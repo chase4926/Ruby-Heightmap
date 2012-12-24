@@ -21,3 +21,5 @@ A heightmap implementation in Ruby.
 -  **Left click** on a cell to recalculate that cell's height
 -  **[** to lower the contrast
 -  **]** to raise the contrast
+-  **F1** to save the heightmap
+-  **F2** to load the heightmap

@@ -147,5 +147,17 @@ class HeightMap
       end
     end
   end
+  
+  def save(filename)
+    File.open(filename, 'w+') do |file|
+      file.print(Marshal::dump(@grid))
+    end
+  end
+  
+  def load(filename)
+    File.open(filename, 'r') do |file|
+      @grid = Marshal::load(file.read())
+    end
+  end
 end
 

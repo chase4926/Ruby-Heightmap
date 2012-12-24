@@ -123,6 +123,11 @@ class GameWindow < Gosu::Window
         # Right square bracket
         # Increase contrast
         @contrast += 1
+      when Gosu::Button::KbF1
+        @heightmap.save('heightmap.dat')
+      when Gosu::Button::KbF2
+        @heightmap.load('heightmap.dat')
+        @grid = @heightmap.get_grid()
     end
   end
   
