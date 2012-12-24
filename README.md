@@ -26,6 +26,6 @@ A heightmap implementation in Ruby.
 
 ## Licensing: ##
 
-Feel free to use it & change it, but unless you re-write it, credit would be nice.
+Feel free to do anything with it, but credit would be nice.
 
 Contact me if you have any questions: *chase4926* (at) *gmail.com*
