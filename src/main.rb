@@ -44,13 +44,13 @@ class GameWindow < Gosu::Window
     super($WINDOW_WIDTH, $WINDOW_HEIGHT, false)
     self.caption = 'Heightmap Visualizer'
     Alphabet::initialize(self)
-    @heightmap = HeightMap.new(80, 80)
+    @heightmap = HeightMap.new(40, 40)
     @grid = @heightmap.get_grid()
     @tile_width = $WINDOW_WIDTH.to_f() / @heightmap.width
     @tile_height = $WINDOW_HEIGHT.to_f() / @heightmap.height
     
     # Image related
-    @contrast = 8
+    @contrast = 10
     record_new_grid()
   end # End GameWindow Initialize
   
@@ -119,6 +119,11 @@ class GameWindow < Gosu::Window
       when Gosu::Button::KbX
         # Strong static
         @heightmap.static(100)
+        @grid = @heightmap.get_grid()
+        record_new_grid()
+      when Gosu::Button::KbC
+        # Smooth grid
+        @heightmap.smooth_grid()
         @grid = @heightmap.get_grid()
         record_new_grid()
       when Gosu::Button::MsLeft

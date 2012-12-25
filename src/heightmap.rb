@@ -10,6 +10,7 @@ class HeightMap
   end
   
   def get_grid()
+    # Returns a copy of the current grid
     return Marshal::load(Marshal::dump(@grid))
   end
   
@@ -35,6 +36,7 @@ class HeightMap
   end
   
   def find_min()
+    # Returns the minimum height in the grid
     min = get(0, 0)
     value = min
     @height.times() do |y|
@@ -47,6 +49,7 @@ class HeightMap
   end
   
   def find_max()
+    # Returns the maximum height in the grid
     max = get(0, 0)
     value = max
     @height.times() do |y|
@@ -59,6 +62,7 @@ class HeightMap
   end
   
   def get_score(x, y)
+    # Returns the sum of the 8 cells surrounding the cell (x, y)
     score = 0
     (-1..1).each() do |c|
       (-1..1).each() do |v|
@@ -84,6 +88,16 @@ class HeightMap
     end
   end
   
+  def get_cell_list()
+    array = []
+    @height.times() do |y|
+      @width.times() do |x|
+        array << [x, y]
+      end
+    end
+    return array
+  end
+  
   def calculate_new_height(x, y)
     # Returns the new height that a cell should be assigned
     average_difference = get_average_difference(x, y)
@@ -96,13 +110,7 @@ class HeightMap
   
   def calculate_new_height_grid()
     # Randomly calculates each cell's height in the grid
-    array = []
-    @height.times() do |y|
-      @width.times() do |x|
-        array << [x, y]
-      end
-    end
-    array.shuffle!()
+    array = get_cell_list().shuffle()
     until array.empty?() do
       x, y = array.pop()
       set(x, y, calculate_new_height(x, y))
@@ -149,14 +157,29 @@ class HeightMap
   end
   
   def save(filename)
+    # Saves the current heightmap data to filename
+    # TODO: Error handling
     File.open(filename, 'w+') do |file|
       file.print(Marshal::dump(@grid))
     end
   end
   
   def load(filename)
+    # Loads filename as current heightmap
+    # TODO: Error handling
     File.open(filename, 'r') do |file|
       @grid = Marshal::load(file.read())
+    end
+  end
+  
+  def smooth_grid(amount=1)
+    # Smooths the grid to the extent of amount
+    amount.times() do
+      array = get_cell_list().shuffle()
+      until array.empty?() do
+        x, y = array.pop()
+        set(x, y, [0, get_average_difference(x, y, 1)].shuffle().pop() + get(x, y))
+      end
     end
   end
 end

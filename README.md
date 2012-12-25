@@ -17,6 +17,7 @@ A heightmap implementation in Ruby.
 -  Hold one of the **shift** keys while pressing the **spacebar** to calculate 10 generations instead of 1
 -  **Z** to generate weak random static
 -  **X** to generate strong random static
+-  **C** to smooth the grid
 -  **Mouse-over** cells to see their height
 -  **Left click** on a cell to recalculate that cell's height
 -  **[** to lower the contrast
