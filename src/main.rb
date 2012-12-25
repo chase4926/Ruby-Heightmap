@@ -14,6 +14,7 @@ include Gosu
 require_relative '../lib/lib.rb'
 require_relative '../lib/lib_misc.rb'
 require_relative '../lib/lib_alphabet.rb'
+require_relative '../lib/lib_bmp.rb'
 require_relative 'heightmap.rb'
 
 
@@ -65,6 +66,23 @@ class GameWindow < Gosu::Window
         end
       end
     end
+  end
+  
+  def save_image(filename)
+    image = BMP::Writer.new(@heightmap.width, @heightmap.height)
+    @heightmap.height.times() do |y|
+      @heightmap.width.times() do |x|
+        color = get_height_color(@heightmap.get(x, y))
+        color = [color.blue().to_s(16), color.green().to_s(16), color.red().to_s(16)]
+        color.each_with_index() do |hex, i|
+          if hex.length() == 1 then
+            hex.insert(0, '0')
+          end
+        end
+        image[x, y] = "#{color[0]}#{color[1]}#{color[2]}" # BGR not RGB
+      end
+    end
+    image.save_as(filename)
   end
   
   def mouse_x_cell()
@@ -142,6 +160,8 @@ class GameWindow < Gosu::Window
         @heightmap.load('heightmap.dat')
         @grid = @heightmap.get_grid()
         record_new_grid()
+      when Gosu::Button::KbF9
+        save_image('hmap.bmp')
     end
   end
   
