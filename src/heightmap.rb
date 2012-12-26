@@ -23,16 +23,20 @@ class HeightMap
     end
   end
   
-  def get(x, y)
+  def get(x, y, out_of_bounds_height=0)
+    # Returns the height at (x,y) if in bounds, otherwise out_of_bounds_height
     if x < 0 or y < 0 or x > @width - 1 or y > @height - 1 then
-      return 0
+      return out_of_bounds_height
     else
       return @grid[y][x]
     end
   end
   
   def set(x, y, value)
-    @grid[y][x] = value
+    # Sets the height at (x, y) to value
+    if x >= 0 and y >= 0 and x <= @width - 1 and y <= @height - 1 then
+      @grid[y][x] = value
+    end
   end
   
   def find_min()
@@ -89,6 +93,7 @@ class HeightMap
   end
   
   def get_cell_list()
+    # Returns an array containing every coordinate in the grid
     array = []
     @height.times() do |y|
       @width.times() do |x|
@@ -172,13 +177,12 @@ class HeightMap
     end
   end
   
-  def smooth_grid(amount=1)
-    # Smooths the grid to the extent of amount
-    amount.times() do
-      array = get_cell_list().shuffle()
-      until array.empty?() do
-        x, y = array.pop()
-        set(x, y, [0, get_average_difference(x, y, 1)].shuffle().pop() + get(x, y))
+  def smooth_grid(step=1, chances=2, list=get_cell_list().shuffle())
+    # Smooths the grid
+    until list.empty?() do
+      x, y = list.pop()
+      if rand(chances.to_i() + 1) != 0 then
+        set(x, y, get_average_difference(x, y, step) + get(x, y))
       end
     end
   end

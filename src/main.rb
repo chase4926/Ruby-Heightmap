@@ -143,7 +143,7 @@ class GameWindow < Gosu::Window
         record_new_grid()
       when Gosu::Button::KbC
         # Smooth grid
-        @heightmap.smooth_grid()
+        @heightmap.smooth_grid(1, 5)
         @grid = @heightmap.get_grid()
         record_new_grid()
       when Gosu::Button::MsLeft
