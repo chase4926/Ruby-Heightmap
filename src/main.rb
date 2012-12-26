@@ -2,10 +2,6 @@
 
 $:.unshift File.dirname(__FILE__)
 
-$VERBOSE = true
-
-$WINDOW_WIDTH = 640
-$WINDOW_HEIGHT = 640
 
 require 'rubygems'
 require 'gosu'
@@ -16,6 +12,12 @@ require_relative '../lib/lib_misc.rb'
 require_relative '../lib/lib_alphabet.rb'
 require_relative '../lib/lib_bmp.rb'
 require_relative 'heightmap.rb'
+
+
+$VERBOSE = true
+
+$WINDOW_WIDTH = 640
+$WINDOW_HEIGHT = 640
 
 
 puts "Input the seed you wish to use, or leave empty to use the current time.\n\n"
@@ -166,7 +168,7 @@ class GameWindow < Gosu::Window
         @grid = @heightmap.get_grid()
         record_new_grid()
       when Gosu::Button::KbF9
-        save_image('hmap.bmp')
+        save_image('../hmap.bmp')
     end
   end
   

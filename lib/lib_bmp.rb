@@ -1,6 +1,7 @@
 
+# Author: Gregory Brown
+# Found on: https://practicingruby.com/articles/shared/oelhlibhtlkx
 
-# From: https://practicingruby.com/articles/shared/oelhlibhtlkx
 class BMP
   class Writer
     PIXEL_ARRAY_OFFSET = 54
@@ -135,27 +136,4 @@ class BMP
     end
   end
 end
-
-
-__END__
-bmp = BMP::Writer.new(2,2)
-
-# NOTE: Bitmap encodes pixels in BGR format, not RGB!
-bmp[0,0] = "ff0000"
-bmp[1,0] = "00ff00"
-bmp[0,1] = "0000ff"
-bmp[1,1] = "ffffff"
-
-bmp.save_as("example_generated.bmp")
-
-sleep(1)
-
-bmp = BMP::Reader.new("example_generated.bmp")
-p bmp.width  #=> 2
-p bmp.height #=> 2
-
-p bmp[0,0] #=> "ff0000"   
-p bmp[1,0] #=> "00ff00" 
-p bmp[0,1] #=> "0000ff" 
-p bmp[1,1] #=> "ffffff"
 

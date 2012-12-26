@@ -24,6 +24,7 @@ A heightmap implementation in Ruby.
 -  **]** to raise the contrast
 -  **F1** to save the heightmap
 -  **F2** to load the heightmap
+-  **F9** to save a bitmap image of the current heightmap
 
 ## Licensing: ##
 
